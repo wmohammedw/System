@@ -19,7 +19,7 @@ class FakeLogoDetection:
         '''
         pass
 
-    def load_image(self):
+    def load_image(self):  # omran
         '''
             here you will write a code to load an image from the database (Folder).
             Also, you will fine the descriptors and keypoints for the laded image and return them.
@@ -28,33 +28,33 @@ class FakeLogoDetection:
         '''
         pass
 
-    def compute_matches(self):
+    def compute_matches(self):  # basheer
         '''
             here you will use either knn or brute force to compute the matching between images.
         '''
         pass
 
-    def input_image(self):
+    def input_image(self):  # fsfs
         '''
             here you will write a code to let the user upload an image from his/her computer.
         '''
         pass
 
-    def real_time_matching(self):
+    def real_time_matching(self):  # mhm
         '''
             here you need to write a code to open the camera and start matching the image that we 
             have in the database and start matching.
         '''
         pass
 
-    def image_to_image_matching(self):
+    def image_to_image_matching(self):  # mhm
         '''
             in the previous method, we apply it in real time. Now, we need to compare or matching 
             between two images only.
         '''
         pass
 
-    def show_text(self):
+    def show_text(self):  # omran
         '''
 
         '''
