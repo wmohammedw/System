@@ -1,5 +1,5 @@
 
-class SmartRoom:
+class SmartDisck:
 
     '''
         this is not the final version. we may add new methods if we need it. 
