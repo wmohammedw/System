@@ -53,3 +53,9 @@ class FakeLogoDetection:
             between two images only.
         '''
         pass
+
+    def show_text(self):
+        '''
+
+        '''
+        pass
