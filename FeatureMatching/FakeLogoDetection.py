@@ -1,3 +1,5 @@
+import os
+
 
 class FakeLogoDetection:
 
@@ -38,7 +40,19 @@ class FakeLogoDetection:
         '''
             here you will write a code to let the user upload an image from his/her computer.
         '''
-        pass
+        #global picPath
+        #picPath = askopenfilename()
+        #picPath = os.path.abspath(filename)
+        # 
+        # #PicNamePath must be replaced with the entrybox GUI component
+        # picNamePath.insert(1.0, picPath)
+
+        ####Temp Code until GUI is Ready.
+        picPath = input("Enter Picture Path")
+        picPath = os.path.abspath(picPath)
+
+        #picNamePath.insert(1.0, picPath)
+
 
     def real_time_matching(self):  # mhm
         '''
