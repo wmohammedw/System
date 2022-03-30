@@ -2,6 +2,8 @@ from PIL import Image #fs
 from PyQt5.QtCore import * #fs
 import os #fs
 import cv2 #omran
+import numpy as np #Basheer
+
 
 class FakeLogoDetection:
 
@@ -35,11 +37,24 @@ class FakeLogoDetection:
             you can add as many parameters as you want.
         '''
 
-    def compute_matches(self):  # basheer
-        '''
-            here you will use either knn or brute force to compute the matching between images.
-        '''
-        pass
+    def compute_matches(self, descriptors_output, descriptors_input):  # basheer
+        #Preparing the FLANN Based matcher
+        index_params = dict(algorithm = 1, trees=3)
+        search_params = dict(checks=100)
+        global flann
+        flann = cv2.FlannBasedMatcher(index_params,search_params)
+
+        #Function for Computing Matches between the train and query descriptors	
+        if(len(descriptors_output)!=0 and len(descriptors_input)!=0):
+            matches = flann.knnMatch(np.asarray(descriptors_input,np.float32),np.asarray(descriptors_output,np.float32),k=2)
+            good = []
+            for m,n in matches:
+                if m.distance < 0.68*n.distance:
+                    good.append([m])
+                    return good
+                else:
+                    return None
+
 
     def input_image(self):  # fsfs
         '''
@@ -83,3 +98,5 @@ class FakeLogoDetection:
         else:
             cv2.putText(img, 'Fake')
         pass
+
+
