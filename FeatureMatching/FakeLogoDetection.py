@@ -12,6 +12,12 @@ class FakeLogoDetection:
     '''
 
     def __init__(self):
+        
+        #Preparing the FLANN Based matcher
+        index_params = dict(algorithm = 1, trees=3)
+        search_params = dict(checks=100)
+        global flann
+        flann = cv2.FlannBasedMatcher(index_params,search_params)
         '''
             You need to initilize the variables here before use them in the below methods.
             follow the OOP concepts.
@@ -38,12 +44,6 @@ class FakeLogoDetection:
         '''
 
     def compute_matches(self, descriptors_output, descriptors_input):  # basheer
-        #Preparing the FLANN Based matcher
-        index_params = dict(algorithm = 1, trees=3)
-        search_params = dict(checks=100)
-        global flann
-        flann = cv2.FlannBasedMatcher(index_params,search_params)
-
         #Function for Computing Matches between the train and query descriptors	
         if(len(descriptors_output)!=0 and len(descriptors_input)!=0):
             matches = flann.knnMatch(np.asarray(descriptors_input,np.float32),np.asarray(descriptors_output,np.float32),k=2)
