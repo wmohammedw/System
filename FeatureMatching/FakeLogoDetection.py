@@ -1,5 +1,6 @@
-import os
-
+from PIL import Image #fs
+from PyQt5.QtCore import * #fs
+import os #fs
 
 class FakeLogoDetection:
 
@@ -40,18 +41,22 @@ class FakeLogoDetection:
         '''
             here you will write a code to let the user upload an image from his/her computer.
         '''
-        #global picPath
-        #picPath = askopenfilename()
-        #picPath = os.path.abspath(filename)
-        # 
-        # #PicNamePath must be replaced with the entrybox GUI component
-        # picNamePath.insert(1.0, picPath)
+        #Here is the Temporary code until GUI is ready, you must enter the file path by yourself.
+        global filepath
+        filepath = input("Enter file path") #The path must be seperated by "/"
 
-        ####Temp Code until GUI is Ready.
-        picPath = input("Enter Picture Path")
-        picPath = os.path.abspath(picPath)
+        print("the file is:\n", filepath)
 
-        #picNamePath.insert(1.0, picPath)
+        im = Image.open(filepath)
+        im.show() #It will show you the image in Microsoft Photos "Or the deafult Image Viewer in your device"
+        
+
+        #The below code is not ready 100%, it will be modified once the GUI is uploaded.
+        
+
+        #def getfile(self):
+            #filepath = QFileDialog.getOpenFileName(self, 'Open file', '',"Image files (*.jpg)")
+            #self.le.setPixmap(QPixmap(filepath))
 
 
     def real_time_matching(self):  # mhm
