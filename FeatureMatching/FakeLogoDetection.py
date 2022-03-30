@@ -1,6 +1,7 @@
 from PIL import Image #fs
 from PyQt5.QtCore import * #fs
 import os #fs
+import cv2 #omran
 
 class FakeLogoDetection:
 
@@ -22,14 +23,17 @@ class FakeLogoDetection:
         '''
         pass
 
-    def load_image(self):  # omran
+    def load_image(self, path):  # omran
+        img = cv2.imread(path, cv2.IMREAD_GRAYSCALE)
+        orb = cv2.ORB_create()
+        kp, des = orb.detectAndCompute(img, None)
+        return kp, des
         '''
             here you will write a code to load an image from the database (Folder).
             Also, you will fine the descriptors and keypoints for the laded image and return them.
 
             you can add as many parameters as you want.
         '''
-        pass
 
     def compute_matches(self):  # basheer
         '''
