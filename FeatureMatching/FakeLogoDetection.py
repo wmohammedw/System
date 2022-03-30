@@ -77,8 +77,9 @@ class FakeLogoDetection:
         '''
         pass
 
-    def show_text(self):  # omran
-        '''
-
-        '''
+    def show_text(self,img,match_percent):  # omran
+        if(match_percent >= 0.85):
+            cv2.putText(img, 'Real')
+        else:
+            cv2.putText(img, 'Fake')
         pass
