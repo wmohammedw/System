@@ -47,10 +47,10 @@ class FakeLogoDetection:
 
         '''
 
-        img = cv2.imread(path, cv2.IMREAD_GRAYSCALE)
+        img = cv2.imread(path)
         orb = cv2.ORB_create()
         kp, des = orb.detectAndCompute(img, None)
-        return kp, des
+        return img, kp, des
         '''
             here you will write a code to load an image from the database (Folder).
             Also, you will fine the descriptors and keypoints for the laded image and return them.
