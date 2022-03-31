@@ -149,7 +149,9 @@ class FakeLogoDetection:
         font = cv2.FONT_ITALIC
         
         if(match_percent >= THRESHOLD):
-            img = cv2.putText(img=img, text='Real', org=org, color=c, fontFace=font, fontScale=fontScale,thickness=thickness)
+            new_img = cv2.putText(img=img, text='Real', org=org, color=c, fontFace=font, fontScale=fontScale,thickness=thickness)
         else:
-            cv2.putText(img, 'Fake')
+            new_img = cv2.putText(img=img, text='Real', org=org, color=c, fontFace=font, fontScale=fontScale,thickness=thickness)
         pass
+        
+        return new_img
