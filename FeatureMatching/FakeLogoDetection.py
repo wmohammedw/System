@@ -1,8 +1,8 @@
-from PIL import Image #fs
-from PyQt5.QtCore import * #fs
-import os #fs
-import cv2 #omran
-import numpy as np #Basheer
+from PIL import Image  # fs
+from PyQt5.QtCore import *  # fs
+import os  # fs
+import cv2  # omran
+import numpy as np  # Basheer
 
 
 class FakeLogoDetection:
@@ -12,12 +12,13 @@ class FakeLogoDetection:
     '''
 
     def __init__(self):
-        
-        #Preparing the FLANN Based matcher
-        index_params = dict(algorithm = 1, trees=3)
-        search_params = dict(checks=100)
-        global flann
-        flann = cv2.FlannBasedMatcher(index_params,search_params)
+
+        # Preparing the FLANN Based matcher
+        self.index_params = dict(algorithm=1, trees=3)
+        self.search_params = dict(checks=100)
+        self.flann = cv2.FlannBasedMatcher(
+            self.index_params, self.search_params)
+
         '''
             You need to initilize the variables here before use them in the below methods.
             follow the OOP concepts.
@@ -32,6 +33,20 @@ class FakeLogoDetection:
         pass
 
     def load_image(self, path):  # omran
+        '''
+            Comment on 31-March-22 !
+
+            Good work. However, the code below is applicable only for real time detection. So, i need to add 
+            if statement and write similar code with small modification for comparing between
+            two images. (initialize the variable in init method) see the following video 
+            (https://www.youtube.com/watch?v=Fe-KWKPk9Zc)
+
+            the second thing, return the image itself with the kp and des.
+
+            the third thing, i think you can read the image in RGB insted of Grayscale
+
+        '''
+
         img = cv2.imread(path, cv2.IMREAD_GRAYSCALE)
         orb = cv2.ORB_create()
         kp, des = orb.detectAndCompute(img, None)
@@ -44,39 +59,63 @@ class FakeLogoDetection:
         '''
 
     def compute_matches(self, descriptors_output, descriptors_input):  # basheer
-        #Function for Computing Matches between the train and query descriptors	
-        if(len(descriptors_output)!=0 and len(descriptors_input)!=0):
-            matches = flann.knnMatch(np.asarray(descriptors_input,np.float32),np.asarray(descriptors_output,np.float32),k=2)
+        '''
+            Comment on 31-March-22 !
+
+            Good work. However, the code below is applicable only for real time detection. So, i need to
+            add if statement for comparing two images. you can see the video here 
+            (https://www.youtube.com/watch?v=Fe-KWKPk9Zc) for brute force algorithm (if the code below
+            is applicable for comparing two images just write a comment below)
+
+
+            IMPORTANT NOTE:
+            Plese use the variables that initialize it in the constructor. Also, do not forget self.
+            further, you can make the k, and 0.68 as parameters in this method. Therefour, i can 
+            optimaize it later. additional, put k=2, 0.68 as defulat value for the parameters.
+
+        '''
+
+        # Function for Computing Matches between the train and query descriptors
+        if(len(descriptors_output) != 0 and len(descriptors_input) != 0):
+            matches = self.flann.knnMatch(np.asarray(
+                descriptors_input, np.float32), np.asarray(descriptors_output, np.float32), k=2)
             good = []
-            for m,n in matches:
+            for m, n in matches:
                 if m.distance < 0.68*n.distance:
                     good.append([m])
                     return good
                 else:
                     return None
 
-
     def input_image(self):  # fsfs
+        '''
+            Comment on 31-March-22 !
+
+            1- delete global filepath
+            2- use OpenCV to read images (we need to use one library for reading images to 
+            prevent the conflicts)
+            3- add the path variable as parameter in this method
+
+        '''
+
         '''
             here you will write a code to let the user upload an image from his/her computer.
         '''
-        #Here is the Temporary code until GUI is ready, you must enter the file path by yourself.
+        # Here is the Temporary code until GUI is ready, you must enter the file path by yourself.
         global filepath
-        filepath = input("Enter file path") #The path must be seperated by "/"
+        # The path must be seperated by "/"
+        filepath = input("Enter file path")
 
         print("the file is:\n", filepath)
 
         im = Image.open(filepath)
-        im.show() #It will show you the image in Microsoft Photos "Or the deafult Image Viewer in your device"
-        
+        im.show()  # It will show you the image in Microsoft Photos "Or the deafult Image Viewer in your device"
 
-        #The below code is not ready 100%, it will be modified once the GUI is uploaded.
-        
+        # The below code is not ready 100%, it will be modified once the GUI is uploaded.
 
-        #def getfile(self):
-            #filepath = QFileDialog.getOpenFileName(self, 'Open file', '',"Image files (*.jpg)")
-            #self.le.setPixmap(QPixmap(filepath))
-
+        # def getfile(self):
+        #filepath = QFileDialog.getOpenFileName(self, 'Open file', '',"Image files (*.jpg)")
+        # self.le.setPixmap(QPixmap(filepath))
 
     def real_time_matching(self):  # mhm
         '''
@@ -92,11 +131,19 @@ class FakeLogoDetection:
         '''
         pass
 
-    def show_text(self,img,match_percent):  # omran
+    def show_text(self, img, match_percent):  # omran
+        '''
+            Comment on 31-March-22 !
+
+            plese add the configration for the text like, color, location of the text, and ect. Also,
+            make the threshold (0.85) as parameter in the method. 
+
+            the second thing, check if the below code is applicable in real-time and when comparing 
+            two images.
+        '''
+
         if(match_percent >= 0.85):
             cv2.putText(img, 'Real')
         else:
             cv2.putText(img, 'Fake')
         pass
-
-
