@@ -152,6 +152,5 @@ class FakeLogoDetection:
             new_img = cv2.putText(img=img, text='Real', org=org, color=c, fontFace=font, fontScale=fontScale,thickness=thickness)
         else:
             new_img = cv2.putText(img=img, text='Real', org=org, color=c, fontFace=font, fontScale=fontScale,thickness=thickness)
-        pass
         
         return new_img
