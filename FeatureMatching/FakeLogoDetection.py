@@ -141,9 +141,15 @@ class FakeLogoDetection:
             the second thing, check if the below code is applicable in real-time and when comparing 
             two images.
         '''
-
-        if(match_percent >= 0.85):
-            cv2.putText(img, 'Real')
+        THRESHOLD = 0.85
+        org = (50, 75)
+        fontScale = 2
+        c = (0,0,255)
+        thickness = 4
+        font = cv2.FONT_ITALIC
+        
+        if(match_percent >= THRESHOLD):
+            img = cv2.putText(img=img, text='Real', org=org, color=c, fontFace=font, fontScale=fontScale,thickness=thickness)
         else:
             cv2.putText(img, 'Fake')
         pass
