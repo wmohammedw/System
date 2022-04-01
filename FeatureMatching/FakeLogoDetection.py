@@ -1,5 +1,5 @@
 from PIL import Image  # fs
-from PyQt5.QtCore import *  # fs
+from PyQt5.QtCore import *  # fs "I don't think this is the library that we will use for GUI (Basheer)"
 import os  # fs
 import cv2  # omran
 import numpy as np  # Basheer
