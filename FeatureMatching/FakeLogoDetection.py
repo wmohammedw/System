@@ -58,7 +58,7 @@ class FakeLogoDetection:
             you can add as many parameters as you want.
         '''
 
-    def compute_matches(self, descriptors_output, descriptors_input):  # basheer
+    def compute_matches(self, descriptors_output, descriptors_input, k_value = 2, n_coef = 0.68):  # basheer
         '''
             Comment on 31-March-22 !
 
@@ -68,20 +68,22 @@ class FakeLogoDetection:
             is applicable for comparing two images just write a comment below)
 
 
+            *Sloved 1-April-22*
             IMPORTANT NOTE:
             Plese use the variables that initialize it in the constructor. Also, do not forget self.
             further, you can make the k, and 0.68 as parameters in this method. Therefour, i can 
-            optimaize it later. additional, put k=2, 0.68 as defulat value for the parameters.
+            optimaize it later. For now, put k=2, 0.68 as defulat value for the parameters.
+            *Sloved 1-April-22*
 
         '''
 
         # Function for Computing Matches between the train and query descriptors
         if(len(descriptors_output) != 0 and len(descriptors_input) != 0):
             matches = self.flann.knnMatch(np.asarray(
-                descriptors_input, np.float32), np.asarray(descriptors_output, np.float32), k=2)
+                descriptors_input, np.float32), np.asarray(descriptors_output, np.float32), k=k_value)
             good = []
             for m, n in matches:
-                if m.distance < 0.68*n.distance:
+                if m.distance <n_coef*n.distance:
                     good.append([m])
                     return good
                 else:
