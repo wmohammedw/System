@@ -31,31 +31,27 @@ class FakeLogoDetection:
         '''
         pass
 
-    def load_image(self, path):  # omran
+    def load_image(self, img1_path, img2_path=None):  # omran
         '''
-            Comment on 31-March-22 !
+        it takes ether two or one image path as parameter
 
-            Good work. However, the code below is applicable only for real time detection. So, i need to add 
-            if statement and write similar code with small modification for comparing between
-            two images. (initialize the variable in init method) see the following video 
-            (https://www.youtube.com/watch?v=Fe-KWKPk9Zc)
-
-            the second thing, return the image itself with the kp and des.
-
-            the third thing, i think you can read the image in RGB insted of Grayscale
+        in case of two paths is given it will return two lists each contain the image and its keypoints and descriptor
+        in case of one paths is given it will return one lists contain the image and its keypoints and descriptor
+        all good ? 
 
         '''
-
-        img = cv2.imread(path)
-        orb = cv2.ORB_create()
-        kp, des = orb.detectAndCompute(img, None) # Here it should be between 2 images (you only extraxted kp & des for 1) /Basheer
-        return img, kp, des
-        '''
-            here you will write a code to load an image from the database (Folder).
-            Also, you will fine the descriptors and keypoints for the laded image and return them.
-
-            you can add as many parameters as you want.
-        '''
+        if(img2_path==None):
+            img = cv2.imread(img1_path)
+            orb = cv2.ORB_create()
+            kp, des = orb.detectAndCompute(img, None)
+            return [img, kp, des]
+        else:
+            img1 = cv2.imread(img1_path)
+            img2 = cv2.imread(img2_path)
+            orb = cv2.ORB_create()
+            kp1, des1 = orb.detectAndCompute(img1, None)
+            kp2, des2 = orb.detectAndCompute(img2, None)
+            return [img1,kp1,des1], [img2,kp2,des2]
 
     def compute_matches(self, des_frame, des_image1, des_image2, k_value = 2, n_coef = 0.68, choice = True):  # basheer
         '''
