@@ -105,10 +105,10 @@ class FakeLogoDetection:
         # cv2.drawMatchesKnn(input_image,input_keypoints,frame,output_keypoints,matches,None,flags=cv2.DrawMatchesFlags_NOT_DRAW_SINGLE_POINTS)/ real-time
 
     
-    def input_image(self):  # fsfs
+    def input_image(self, inputImage):  # fsfs
         '''
             Comment on 31-March-22 !
-            *Solved on 4/1/2022
+            *Solved on 4/1/2022*
             1- delete global filepath
             2- use OpenCV to read images (we need to use one library for reading images to 
             prevent the conflicts)
@@ -129,6 +129,7 @@ class FakeLogoDetection:
         cv2.imshow("Image", image)
 
         cv2.waitKey(0) 
+        return image
 
         # The below code is not ready 100%, it will be modified once the GUI is uploaded.
 
