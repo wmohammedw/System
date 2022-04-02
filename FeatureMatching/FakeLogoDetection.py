@@ -1,7 +1,6 @@
-from PIL import Image  # fs
 from PyQt5.QtCore import *  # fs "I don't think this is the library that we will use for GUI /Basheer"
-import os  # fs
-import cv2  # omran
+
+import cv2  # omran + fs
 import numpy as np  # Basheer
 
 
@@ -126,7 +125,7 @@ class FakeLogoDetection:
         image = cv2.imread(filepath) #Pass the path to cv2
 
         #print(image.shape) 
-        cv2.imshow("Image", image)
+        #cv2.imshow("Image", image)
 
         cv2.waitKey(0) 
         return image
