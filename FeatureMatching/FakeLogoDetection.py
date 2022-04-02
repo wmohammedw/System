@@ -108,7 +108,7 @@ class FakeLogoDetection:
     def input_image(self):  # fsfs
         '''
             Comment on 31-March-22 !
-
+            *Solved on 4/1/2022
             1- delete global filepath
             2- use OpenCV to read images (we need to use one library for reading images to 
             prevent the conflicts)
@@ -120,14 +120,15 @@ class FakeLogoDetection:
             here you will write a code to let the user upload an image from his/her computer.
         '''
         # Here is the Temporary code until GUI is ready, you must enter the file path by yourself.
-        global filepath
-        # The path must be seperated by "/"
-        filepath = input("Enter file path")
+        
+        filepath = input("Enter file path:\n")
 
-        print("the file is:\n", filepath)
+        image = cv2.imread(filepath) #Pass the path to cv2
 
-        im = Image.open(filepath)
-        im.show()  # It will show you the image in Microsoft Photos "Or the deafult Image Viewer in your device"
+        #print(image.shape) 
+        cv2.imshow("Image", image)
+
+        cv2.waitKey(0) 
 
         # The below code is not ready 100%, it will be modified once the GUI is uploaded.
 
