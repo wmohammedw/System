@@ -19,6 +19,8 @@ class FakeLogosDetection:
         self.flann = cv2.FlannBasedMatcher(
             self.index_params, self.search_params)
 
+        self.detector = cv2.ORB_create(nfeatures=5000)
+
         '''
             You need to initilize the variables here before use them in the below methods.
             follow the OOP concepts.
@@ -43,18 +45,21 @@ class FakeLogosDetection:
         '''
         if(img2_path == None):
             img = cv2.imread(img1_path)
-            orb = cv2.ORB_create()
-            kp, des = orb.detectAndCompute(img, None)
-            return [img, kp, des]
+            img = cv2.resize(img, (400, 550), interpolation=cv2.INTER_AREA)
+            gray_img = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
+
+            #orb = cv2.ORB_create()
+            kp, des = self.detector.detectAndCompute(gray_img, None)
+            return img, kp, des
         else:
             img1 = cv2.imread(img1_path)
             img2 = cv2.imread(img2_path)
-            orb = cv2.ORB_create()
-            kp1, des1 = orb.detectAndCompute(img1, None)
-            kp2, des2 = orb.detectAndCompute(img2, None)
+            #orb = cv2.ORB_create()
+            kp1, des1 = self.detector.detectAndCompute(img1, None)
+            kp2, des2 = self.detector.detectAndCompute(img2, None)
             return [img1, kp1, des1], [img2, kp2, des2]
 
-    def compute_matches(self, des_image1, des_image2, des_frame=None, k_value=2, n_coef=0.68, real_time=True):  # basheer
+    def compute_matches(self, des_image1, des_image2=None, des_frame=None, k_value=2, n_coef=0.68, real_time=True):  # basheer
         '''
             Comment on 31-March-22 !
             *Solved 2-April-22*
@@ -132,12 +137,44 @@ class FakeLogosDetection:
         #filepath = QFileDialog.getOpenFileName(self, 'Open file', '',"Image files (*.jpg)")
         # self.le.setPixmap(QPixmap(filepath))
 
-    def real_time_matching(self):  # mhm
+    def real_time_matching(self, input_image, input_keypoint, input_desc, MIN_MATCHES=20):  # mhm
         '''
             here you need to write a code to open the camera and start matching the image that we 
             have in the database and start matching.
         '''
-        pass
+
+        cap = cv2.VideoCapture(0)
+        ret, frame = cap.read()
+
+        #detector = cv2.ORB_create(nfeatures=5000)
+
+        while(ret):
+            ret, frame = cap.read()
+
+            if len(input_keypoint) < MIN_MATCHES:
+                continue
+
+            frame = cv2.resize(frame, (700, 600))
+            frame_bw = cv2.cvtColor(frame, cv2.COLOR_RGB2GRAY)
+
+            output_keypoints, output_desc = self.detector.detectAndCompute(
+                frame_bw, None)
+            matching = self.compute_matches(
+                input_desc, des_frame=output_desc, real_time=True)
+
+            if matching != None:
+                output_final = cv2.drawMatchesKnn(
+                    input_image, input_keypoint, frame, output_keypoints, matching, None, flags=cv2.DrawMatchesFlags_NOT_DRAW_SINGLE_POINTS)
+                cv2.imshow("final output", output_final)
+            else:
+                # cv2.imshow("final output", frame)
+                output_final = cv2.drawMatchesKnn(
+                    input_image, input_keypoint, frame, output_keypoints, matching, None, flags=cv2.DrawMatchesFlags_NOT_DRAW_SINGLE_POINTS)
+                cv2.imshow("final output", output_final)
+
+            key = cv2.waitKey(5)
+            if key == 27:
+                break
 
     def image_to_image_matching(self, img1, kp1, img2, kp2, matches, m):  # mhm
         '''
