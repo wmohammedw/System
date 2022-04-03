@@ -1,10 +1,11 @@
-from PyQt5.QtCore import *  # fs "I don't think this is the library that we will use for GUI /Basheer"
+# fs "I don't think this is the library that we will use for GUI /Basheer"
+from PyQt5.QtCore import *
 
 import cv2  # omran + fs
 import numpy as np  # Basheer
 
 
-class FakeLogoDetection:
+class FakeLogosDetection:
 
     '''
         this is not the final version. we may add new methods if we need it. 
@@ -40,7 +41,7 @@ class FakeLogoDetection:
         all good ? 
 
         '''
-        if(img2_path==None):
+        if(img2_path == None):
             img = cv2.imread(img1_path)
             orb = cv2.ORB_create()
             kp, des = orb.detectAndCompute(img, None)
@@ -51,9 +52,9 @@ class FakeLogoDetection:
             orb = cv2.ORB_create()
             kp1, des1 = orb.detectAndCompute(img1, None)
             kp2, des2 = orb.detectAndCompute(img2, None)
-            return [img1,kp1,des1], [img2,kp2,des2]
+            return [img1, kp1, des1], [img2, kp2, des2]
 
-    def compute_matches(self, des_frame, des_image1, des_image2, k_value = 2, n_coef = 0.68, choice = True):  # basheer
+    def compute_matches(self, des_image1, des_image2, des_frame=None, k_value=2, n_coef=0.68, real_time=True):  # basheer
         '''
             Comment on 31-March-22 !
             *Solved 2-April-22*
@@ -72,14 +73,14 @@ class FakeLogoDetection:
 
         '''
         # If the user chose (Open Camera) choice will be True otherwise it will set to False
-        if (choice):
-        # Function for Computing Matches between the train and query descriptors
+        if (real_time):
+            # Function for Computing Matches between the train and query descriptors
             if(len(des_frame) != 0 and len(des_image1) != 0):
                 matches = self.flann.knnMatch(np.asarray(
                     des_image1, np.float32), np.asarray(des_frame, np.float32), k=k_value)
                 good = []
                 for m, n in matches:
-                    if m.distance <n_coef*n.distance:
+                    if m.distance < n_coef*n.distance:
                         good.append([m])
                         return good
                     else:
@@ -91,15 +92,14 @@ class FakeLogoDetection:
             # Image-to-Image matching using Brute-Force
             bf = cv2.BFMatcher(cv2.NORM_HAMMING, crossCheck=True)
             matches = bf.match(des_image1, des_image2)
-            matches = sorted(matches, key = lambda x:x.distance)
-            
+            matches = sorted(matches, key=lambda x: x.distance)
+
             return matches
-        
+
         # Drawing Matches
         # matching_result = cv2.drawMatches(img1, kp1, img2, kp2, matches[:50], None, flags=2) /for image-to-image
         # cv2.drawMatchesKnn(input_image,input_keypoints,frame,output_keypoints,matches,None,flags=cv2.DrawMatchesFlags_NOT_DRAW_SINGLE_POINTS)/ real-time
 
-    
     def input_image(self, inputImage):  # fsfs
         '''
             Comment on 31-March-22 !
@@ -115,15 +115,15 @@ class FakeLogoDetection:
             here you will write a code to let the user upload an image from his/her computer.
         '''
         # Here is the Temporary code until GUI is ready, you must enter the file path by yourself.
-        
+
         filepath = input("Enter file path:\n")
 
-        image = cv2.imread(filepath) #Pass the path to cv2
+        image = cv2.imread(filepath)  # Pass the path to cv2
 
-        #print(image.shape) 
+        # print(image.shape)
         #cv2.imshow("Image", image)
 
-        cv2.waitKey(0) 
+        # cv2.waitKey(0)
         return image
 
         # The below code is not ready 100%, it will be modified once the GUI is uploaded.
@@ -139,12 +139,19 @@ class FakeLogoDetection:
         '''
         pass
 
-    def image_to_image_matching(self):  # mhm
+    def image_to_image_matching(self, img1, kp1, img2, kp2, matches, m):  # mhm
         '''
             in the previous method, we apply it in real time. Now, we need to compare or matching 
             between two images only.
         '''
-        pass
+
+        matching_result = cv2.drawMatches(
+            img1, kp1, img2, kp2, matches[:m], None, flags=2)
+        cv2.imshow("image1", img1)
+        cv2.imshow("image2", img2)
+        cv2.imshow("Result of matching", matching_result)
+        cv2.waitKey(0)
+        cv2.destroyAllWindows()
 
     def show_text(self, img, match_percent):  # omran
         '''
@@ -159,13 +166,15 @@ class FakeLogoDetection:
         THRESHOLD = 0.85
         org = (50, 75)
         fontScale = 2
-        c = (0,0,255)
+        c = (0, 0, 255)
         thickness = 4
         font = cv2.FONT_ITALIC
-        
+
         if(match_percent >= THRESHOLD):
-            new_img = cv2.putText(img=img, text='Real', org=org, color=c, fontFace=font, fontScale=fontScale,thickness=thickness)
+            new_img = cv2.putText(img=img, text='Real', org=org, color=c,
+                                  fontFace=font, fontScale=fontScale, thickness=thickness)
         else:
-            new_img = cv2.putText(img=img, text='Real', org=org, color=c, fontFace=font, fontScale=fontScale,thickness=thickness)
-        
+            new_img = cv2.putText(img=img, text='Real', org=org, color=c,
+                                  fontFace=font, fontScale=fontScale, thickness=thickness)
+
         return new_img
