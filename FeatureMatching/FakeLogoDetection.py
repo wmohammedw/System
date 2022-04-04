@@ -1,5 +1,5 @@
 # fs "I don't think this is the library that we will use for GUI /Basheer"
-#Yes, i may delete the library, but i just waiting for the GUI/ fs
+# Yes, i may delete the library, but i just waiting for the GUI/ fs
 from PyQt5.QtCore import *
 
 import cv2  # omran + fs
@@ -60,7 +60,7 @@ class FakeLogosDetection:
             kp2, des2 = self.detector.detectAndCompute(img2, None)
             return [img1, kp1, des1], [img2, kp2, des2]
 
-    def compute_matches(self, des_image1, des_image2=None, des_frame=None, k_value=2, n_coef=0.68, real_time=True):  # basheer
+    def compute_matches(self, des_image1, des_image2=None, des_frame=None, n_coef=0.68, real_time=True):  # basheer
         '''
             Comment on 31-March-22 !
             *Solved 2-April-22*
@@ -83,7 +83,7 @@ class FakeLogosDetection:
             # Function for Computing Matches between the train and query descriptors
             if(len(des_frame) != 0 and len(des_image1) != 0):
                 matches = self.flann.knnMatch(np.asarray(
-                    des_image1, np.float32), np.asarray(des_frame, np.float32), k=k_value)
+                    des_frame, np.float32), np.asarray(des_image1, np.float32), k=2)
                 good = []
                 for m, n in matches:
                     if m.distance < n_coef*n.distance:
@@ -142,9 +142,10 @@ class FakeLogosDetection:
         '''
             here you need to write a code to open the camera and start matching the image that we 
             have in the database and start matching.
+            'https://192.168.8.191:8080/video'
         '''
 
-        cap = cv2.VideoCapture(0)
+        cap = cv2.VideoCapture('https://192.168.8.191:8080/video')
         ret, frame = cap.read()
 
         #detector = cv2.ORB_create(nfeatures=5000)
@@ -156,12 +157,12 @@ class FakeLogosDetection:
                 continue
 
             frame = cv2.resize(frame, (700, 600))
-            frame_bw = cv2.cvtColor(frame, cv2.COLOR_RGB2GRAY)
+            frame_bw = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
             output_keypoints, output_desc = self.detector.detectAndCompute(
                 frame_bw, None)
             matching = self.compute_matches(
-                input_desc, des_frame=output_desc, real_time=True)
+                des_image1=input_desc, des_frame=output_desc, real_time=True, n_coef=0.90)
 
             if matching != None:
                 output_final = cv2.drawMatchesKnn(
@@ -175,7 +176,8 @@ class FakeLogosDetection:
 
             key = cv2.waitKey(5)
             if key == 27:
-                break
+                # break
+                pass
 
     def image_to_image_matching(self, img1, kp1, img2, kp2, matches, m):  # mhm
         '''

@@ -18,4 +18,4 @@ if __name__ == '__main__':
     input_image, input_keypoints, input_descriptors = fake_logo_detection.load_image(
         img1_path=r'D:\IAU\5 - year\Second semester\Computer vision\System\FeatureMatching\Dataset\bag.jpeg')
     fake_logo_detection.real_time_matching(
-        input_image, input_keypoints, input_descriptors)
+        input_image, input_keypoints, input_descriptors, MIN_MATCHES=20)
