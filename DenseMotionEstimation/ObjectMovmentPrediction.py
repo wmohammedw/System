@@ -12,8 +12,5 @@ class ObjectMovmentDetection:
     def draw_hsv(flow):  # fsfs
         pass
 
-    def real_time__motion_estimation(self):  # omran
-        pass
-
     def video_motion_estimation(self):  # mhm
         pass
