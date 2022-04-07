@@ -27,7 +27,19 @@ class ObjectMovmentDetection:
         return img_bgr
 
     def draw_hsv(flow):  # fsfs
-        pass
+        h, w = flow.shape[:2]
+        fx, fy = flow[:,:,0], flow[:,:,1]
+        
+        ang = np.arctan2(fy, fx) + np.pi
+        v = np.sqrt(fx*fx+fy*fy)
+        
+        hsv = np.zeros((h, w, 3), np.uint8)
+        hsv[..., 0] = ang*(180/np.pi/2)
+        hsv[..., 1] = 255
+        hsv[..., 2] = np.minimum(v*4, 255)
+        bgr = cv2.cvtColor(hsv, cv2.COLOR_HSV2BGR)
+        
+        return bgr
 
     def video_motion_estimation(self):  # mhm
         pass
