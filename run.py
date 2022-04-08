@@ -22,7 +22,7 @@ if __name__ == '__main__':
     #     input_image, input_keypoints, input_descriptors, MIN_MATCHES=20)
 
     denseMotion = ObjectMovmentDetection()
-    # denseMotion.video_motion_estimation(
-    #     video_file_path=r'DenseMotionEstimation\Teens Involved in Car Crash That Was Like a Movie Scene.mp4')
+    denseMotion.video_motion_estimation(
+        video_file_path=r'DenseMotionEstimation\Teens Involved in Car Crash That Was Like a Movie Scene.mp4')
 
-    denseMotion.real_time()
+    # denseMotion.real_time()

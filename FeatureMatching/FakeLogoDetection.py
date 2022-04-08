@@ -33,7 +33,6 @@ class FakeLogosDetection:
 
                 and use it inside load_image method.
         '''
-        pass
 
     def load_image(self, img1_path, img2_path=None):  # omran
         '''
