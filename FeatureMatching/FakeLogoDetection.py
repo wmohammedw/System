@@ -10,17 +10,21 @@ class FakeLogosDetection:
 
     '''
         this is not the final version. we may add new methods if we need it. 
+
+        useful link:
+        https://datahacker.rs/feature-matching-methods-comparison-in-opencv/
     '''
 
     def __init__(self):
 
         # Preparing the FLANN Based matcher
-        self.index_params = dict(algorithm=1, trees=3)
-        self.search_params = dict(checks=100)
+        self.FLAN_INDEX_KDTREE = 0
+        self.index_params = dict(algorithm=self.FLAN_INDEX_KDTREE, trees=5)
+        self.search_params = dict(checks=50)
         self.flann = cv2.FlannBasedMatcher(
             self.index_params, self.search_params)
 
-        self.detector = cv2.ORB_create(nfeatures=5000)
+        self.detector = cv2.SIFT_create()
 
         '''
             You need to initilize the variables here before use them in the below methods.
@@ -59,7 +63,7 @@ class FakeLogosDetection:
             kp2, des2 = self.detector.detectAndCompute(img2, None)
             return [img1, kp1, des1], [img2, kp2, des2]
 
-    def compute_matches(self, des_image1, des_image2=None, des_frame=None, n_coef=0.68, real_time=True):  # basheer
+    def compute_matches(self, des_image1, des_image2=None, n_coef=0.4):  # basheer
         '''
             Comment on 31-March-22 !
             *Solved 2-April-22*
@@ -77,29 +81,15 @@ class FakeLogosDetection:
             *Sloved 1-April-22*
 
         '''
-        # If the user chose (Open Camera) choice will be True otherwise it will set to False
-        if (real_time):
-            # Function for Computing Matches between the train and query descriptors
-            if(len(des_frame) != 0 and len(des_image1) != 0):
-                matches = self.flann.knnMatch(np.asarray(
-                    des_frame, np.float32), np.asarray(des_image1, np.float32), k=2)
-                good = []
-                for m, n in matches:
-                    if m.distance < n_coef*n.distance:
-                        good.append([m])
-                        return good
-                    else:
-                        return None
-            else:
-                # There are no descriptor
-                pass
-        else:
-            # Image-to-Image matching using Brute-Force
-            bf = cv2.BFMatcher(cv2.NORM_HAMMING, crossCheck=True)
-            matches = bf.match(des_image1, des_image2)
-            matches = sorted(matches, key=lambda x: x.distance)
+        # Image-to-Image matching and real time matching
+        matches = self.flann.knnMatch(des_image1, des_image2, k=2)
+        good_matches = []
 
-            return matches
+        for m1, m2 in matches:
+            if m1.distance < n_coef * m2.distance:
+                good_matches.append([m1])
+
+        return good_matches
 
         # Drawing Matches
         # matching_result = cv2.drawMatches(img1, kp1, img2, kp2, matches[:50], None, flags=2) /for image-to-image
@@ -137,14 +127,14 @@ class FakeLogosDetection:
         #filepath = QFileDialog.getOpenFileName(self, 'Open file', '',"Image files (*.jpg)")
         # self.le.setPixmap(QPixmap(filepath))
 
-    def real_time_matching(self, input_image, input_keypoint, input_desc, MIN_MATCHES=20):  # mhm
+    def real_time_matching(self, input_image, input_keypoint, input_desc):  # mhm
         '''
             here you need to write a code to open the camera and start matching the image that we 
             have in the database and start matching.
             'https://192.168.8.191:8080/video'
         '''
 
-        cap = cv2.VideoCapture('https://192.168.8.191:8080/video')
+        cap = cv2.VideoCapture(0)
         ret, frame = cap.read()
 
         #detector = cv2.ORB_create(nfeatures=5000)
@@ -152,16 +142,13 @@ class FakeLogosDetection:
         while(ret):
             ret, frame = cap.read()
 
-            if len(input_keypoint) < MIN_MATCHES:
-                continue
-
             frame = cv2.resize(frame, (700, 600))
             frame_bw = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
             output_keypoints, output_desc = self.detector.detectAndCompute(
                 frame_bw, None)
             matching = self.compute_matches(
-                des_image1=input_desc, des_frame=output_desc, real_time=True, n_coef=0.90)
+                des_image1=input_desc, des_image2=output_desc)
 
             if matching != None:
                 output_final = cv2.drawMatchesKnn(
@@ -178,20 +165,21 @@ class FakeLogosDetection:
                 # break
                 pass
 
-    def image_to_image_matching(self, img1, kp1, img2, kp2, matches, m):  # mhm
+    def image_to_image_matching(self, img1, kp1, img2, kp2, matches):  # mhm
         '''
             in the previous method, we apply it in real time. Now, we need to compare or matching 
             between two images only.
         '''
-
-        matching_result = cv2.drawMatches(
-            img1, kp1, img2, kp2, matches[:m], None, flags=2)
+        # [:m]
+        matching_result = cv2.drawMatchesKnn(
+            img1, kp1, img2, kp2, matches, None, flags=2)
         cv2.imshow("image1", img1)
         cv2.imshow("image2", img2)
         cv2.imshow("Result of matching", matching_result)
         cv2.waitKey(0)
         cv2.destroyAllWindows()
 
+    # we may delete the below function
     def show_text(self, img, match_percent):  # omran
         '''
             Comment on 31-March-22 !
@@ -217,3 +205,54 @@ class FakeLogosDetection:
                                   fontFace=font, fontScale=fontScale, thickness=thickness)
 
         return new_img
+
+        # th old function
+
+        #     def compute_matches(self, des_image1, des_image2=None, des_frame=None, n_coef=0.68, real_time=True):  # basheer
+        # '''
+        #     Comment on 31-March-22 !
+        #     *Solved 2-April-22*
+        #     Good work. However, the code below is applicable only for real time detection. So, i need to
+        #     add if statement for comparing two images. you can see the video here
+        #     (https://www.youtube.com/watch?v=Fe-KWKPk9Zc) for brute force algorithm (if the code below
+        #     is applicable for comparing two images just write a comment below)
+        #     *Solved 2-April-22*
+
+        #     *Sloved 1-April-22*
+        #     IMPORTANT NOTE:
+        #     Plese use the variables that initialize it in the constructor. Also, do not forget self.
+        #     further, you can make the k, and 0.68 as parameters in this method. Therefour, i can
+        #     optimaize it later. For now, put k=2, 0.68 as defulat value for the parameters.
+        #     *Sloved 1-April-22*
+
+        # '''
+        # # If the user chose (Open Camera) choice will be True otherwise it will set to False
+        # if (real_time):
+        #     # Function for Computing Matches between the train and query descriptors
+        #     if(len(des_frame) != 0 and len(des_image1) != 0):
+        #         matches = self.flann.knnMatch(np.asarray(
+        #             des_frame, np.float32), np.asarray(des_image1, np.float32), k=2)
+        #         good = []
+        #         for m, n in matches:
+        #             if m.distance < n_coef*n.distance:
+        #                 good.append([m])
+        #                 return good
+        #             else:
+        #                 return None
+        #     else:
+        #         # There are no descriptor
+        #         pass
+        # else:
+        #     # Image-to-Image matching using Brute-Force
+        #     matches = self.flann.knnMatch(des_image1, des_image2, k=2)
+        #     good_matches = []
+
+        #     for m1, m2 in matches:
+        #         if m1.distance < 0.4 * m2.distance:
+        #             good_matches.append([m1])
+
+        #     return good_matches
+
+        # # Drawing Matches
+        # # matching_result = cv2.drawMatches(img1, kp1, img2, kp2, matches[:50], None, flags=2) /for image-to-image
+        # # cv2.drawMatchesKnn(input_image,input_keypoints,frame,output_keypoints,matches,None,flags=cv2.DrawMatchesFlags_NOT_DRAW_SINGLE_POINTS)/ real-time
