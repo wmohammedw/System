@@ -27,37 +27,12 @@ class SmartDisck:
         '''
         pass
 
-    def data_augmentation(self):
+    def loading_model(self):
         '''
-            here you will apply the data augmentation on training set only.
-
-            you can add as many parameters you want.
+            here you will load the trained model and use it in action.
         '''
         pass
 
-    def model_architecture(self):
-        '''
-            here you need to write the model (we will try CNN first with Transfer learning)
-            architecture without compile and fit functions.
-
-            you can add as many parameters you want.
-        '''
-        pass
-
-    def model_training(self):
-        '''
-            here you will set the model configuration such as checkpoint, early stopping, optimizer, 
-            compile, and fit methods.
-
-            you can add as many parameters you want.
-        '''
-        pass
-
-    def arduino(self):
-        '''
-            we will disscused later.
-        '''
-        pass
 
     def bounded_box(self):
         '''
