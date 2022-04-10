@@ -81,6 +81,8 @@ class FakeLogosDetection:
             *Sloved 1-April-22*
 
         '''
+        counter_good = 0
+        counter_all = 0
         # Image-to-Image matching and real time matching
         matches = self.flann.knnMatch(des_image1, des_image2, k=2)
         good_matches = []
@@ -88,6 +90,9 @@ class FakeLogosDetection:
         for m1, m2 in matches:
             if m1.distance < n_coef * m2.distance:
                 good_matches.append([m1])
+                counter_good = counter_good + 1
+            else:
+                counter_all = counter_all + 1
 
         return good_matches
 
@@ -134,7 +139,7 @@ class FakeLogosDetection:
             'https://192.168.8.191:8080/video'
         '''
 
-        cap = cv2.VideoCapture(0)
+        cap = cv2.VideoCapture('https://192.168.8.191:8080/video')
         ret, frame = cap.read()
 
         #detector = cv2.ORB_create(nfeatures=5000)
