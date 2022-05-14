@@ -139,7 +139,7 @@ class FakeLogosDetection:
             'https://192.168.8.191:8080/video'
         '''
 
-        cap = cv2.VideoCapture('https://192.168.8.191:8080/video')
+        cap = cv2.VideoCapture('http://192.168.43.1:8080/video')
         ret, frame = cap.read()
 
         #detector = cv2.ORB_create(nfeatures=5000)
