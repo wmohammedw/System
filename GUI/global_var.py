@@ -9,9 +9,9 @@ from os import environ
 
 # Load the UI Files
 cwd = os.getcwd()
-home_file = os.path.join(cwd, "Application_V2/uiWindows/home_win.ui")
-fakeLogo_file = os.path.join(cwd, "Application_V2/uiWindows/logo_win.ui")
-objectMotion_file = os.path.join(cwd, "Application_V2/uiWindows/object_motion_win.ui")
+home_file = os.path.join(cwd, "GUI/uiWindows/home_win.ui")
+fakeLogo_file = os.path.join(cwd, "GUI/uiWindows/logo_win.ui")
+objectMotion_file = os.path.join(cwd, "GUI/uiWindows/object_motion_win.ui")
 
 # Setting the widget list and app for the GUI compnent
 # Widget is a list of the UI windows
