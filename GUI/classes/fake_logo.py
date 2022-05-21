@@ -70,6 +70,7 @@ class FakeLogoDet(QDialog):
 
     def reset(self):
         self.file_name.setText("")
+        self.file_name_2.setText("")
         self.fname = ["", ""]
         self.cameraon = False
         self.photouploadon = False
