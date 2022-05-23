@@ -42,8 +42,8 @@ class FakeLogoDet(QDialog):
             self.uploadFile.setStyleSheet(PRESSED_STYLE)
             self.error.setText("")
             # Open the image from the file explore and define the file name (stored in "self.fname")
-            self.fname[0], __ = QFileDialog.getOpenFileName(self, "Upload Images 1", "C:/Users/Arab0/Documents", 'Images(*.PNG *.JPG *.JPEG *.XMP *.RAW *TIFF *.AI)')
-            self.fname[1], __ = QFileDialog.getOpenFileName(self, "Upload Images 2", "C:/Users/Arab0/Documents", 'Images(*.PNG *.JPG *.JPEG *.XMP *.RAW *TIFF *.AI)')
+            self.fname[0], __ = QFileDialog.getOpenFileName(self, "Upload Images 1", "C:/Users/Arab0/Documents", 'Images(*.PNG *.JPG *.JPEG)')
+            self.fname[1], __ = QFileDialog.getOpenFileName(self, "Upload Images 2", "C:/Users/Arab0/Documents", 'Images(*.PNG *.JPG *.JPEG)')
             self.file_name.setText(self.fname[0]) # Change the label below the button to the file name
             self.file_name_2.setText(self.fname[1]) # Change the label below the button to the file name
 
